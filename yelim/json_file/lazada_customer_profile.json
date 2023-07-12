@@ -1,0 +1,392 @@
+{   
+    "name": "miley_lazada",
+    "action":"create",
+    "sparkproperties": {
+        "source": [
+            {
+                "source_index": "s1",
+                "node_properties": {
+                    "name": "data_from_lazada",
+                    "node_type": "xlsx"
+                },
+                "data_source": {
+                    "path": "s3://google-sheet/Miley/google-sheet/data_ggs.xlsx",
+                    "sheet_name":"lazada_2020_21_22"
+                },
+                "data_preview": ""
+            }
+        ],
+        "transform": [
+            {
+                "transform_index": "tf1",
+                "node_properties": {
+                    "name": "create_spark_dataframe",
+                    "node_type": "Convert Into Dynamic",
+                    "node_parents": ["data_from_lazada"]
+                },
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf2",
+                "node_properties": {
+                    "name": "select_fields",
+                    "node_type": "Select Field",
+                    "node_parents": ["create_spark_dataframe"]
+                },
+                "transform_select_field": ["createTime", "updateTime","customerName", 
+                                            "customerEmail","shippingName","shippingAddress",
+                                            "shippingAddress3","shippingAddress4",
+                                            "shippingAddress5","billingPhone","payMethod"],
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf3",
+                "node_properties": {
+                    "name": "change_colunms_name_and_type",
+                    "node_type": "Change Schema",
+                    "node_parents": ["select_fields"]
+                },
+                "transform_apply_mapping": [
+                    {
+                        "source_key": "deliveryType",
+                        "old_data_type":"string",
+                        "target_key": "shipping_method",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "createTime",
+                        "old_data_type":"string",
+                        "target_key": "created_at",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "updateTime",
+                        "old_data_type":"string",
+                        "target_key": "updated_at",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "invoiceNumber",
+                        "old_data_type":"string",
+                        "target_key": "source_order_id",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "deliveredDate",
+                        "old_data_type":"string",
+                        "target_key": "delivered_date",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "customerName",
+                        "old_data_type":"string",
+                        "target_key": "source_customer_id",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "customerEmail",
+                        "old_data_type":"string",
+                        "target_key": "email",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "shippingName",
+                        "old_data_type":"string",
+                        "target_key": "customer_name",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "shippingAddress",
+                        "old_data_type":"string",
+                        "target_key": "street",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "shippingAddress3",
+                        "old_data_type":"string",
+                        "target_key": "city",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "shippingAddress4",
+                        "old_data_type":"string",
+                        "target_key": "district",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "shippingAddress5",
+                        "old_data_type":"string",
+                        "target_key": "ward",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "billingPhone",
+                        "old_data_type":"string",
+                        "target_key": "phone",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "payMethod",
+                        "old_data_type":"string",
+                        "target_key": "payment_method",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "paidPrice",
+                        "old_data_type":"string",
+                        "target_key": "total_payment",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "unitPrice",
+                        "old_data_type":"string",
+                        "target_key": "total_price",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "sellerDiscountTotal",
+                        "old_data_type":"string",
+                        "target_key": "total_discount",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "shippingFee",
+                        "old_data_type":"string",
+                        "target_key": "shipping_fee",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "status",
+                        "old_data_type":"string",
+                        "target_key": "status",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "buyerFailedDeliveryReturnInitiator",
+                        "old_data_type":"string",
+                        "target_key": "refund_status",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "buyerFailedDeliveryReason",
+                        "old_data_type":"string",
+                        "target_key": "cancellation_reason",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "sellerNote",
+                        "old_data_type":"string",
+                        "target_key": "note",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    }
+                ],
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf4",
+                "node_properties": {
+                    "name": "convert_df",
+                    "node_type": "Convert Into DataFrame",
+                    "node_parents": ["change_colunms_name_and_type"]
+                },
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf5",
+                "node_properties": {
+                    "name": "groupby_and_agg",
+                    "node_type": "Group By",
+                    "node_parents": ["convert_df"],
+                    "group_by_column":"source_order_id"
+                    
+                },
+                "transform_groupby":[
+                    {
+                        "column":"status",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"refund_status",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"shipping_method",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"cancellation_reason",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"total_price",
+                        "operation":"sum"
+                    },
+                    {
+                        "column":"total_payment",
+                        "operation":"sum"
+                    },
+                    {
+                        "column":"payment_method",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"shipping_fee",
+                        "operation":"sum"
+                    },
+                    {
+                        "column":"total_discount",
+                        "operation":"sum"
+                    },
+                    {
+                        "column":"street",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"city",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"district",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"ward",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"source_customer_id",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"email",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"phone",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"customer_name",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"created_at",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"updated_at",
+                        "operation":"max"
+                    },
+                    {
+                        "column":"note",
+                        "operation":"max"
+                    }
+                ],
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf6",
+                "node_properties": {
+                    "name": "create_id_using_uuid",
+                    "node_type": "UUID",
+                    "node_parents": ["groupby_and_agg"],
+                    "column_name":"purchase_order_id"
+                },
+                
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf7",
+                "node_properties": {
+                    "name": "add_multiple_columns",
+                    "node_type": "Add Multiple Columns",
+                    "node_parents": ["create_id_using_uuid"]
+                    
+                },
+                "transform_add_multi_column":[
+                    {
+                        "column_name":"source_name",
+                        "value":"lazada"
+                    },
+                    {
+                        "column_name":"state",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"shipping_description",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"shipping_code",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"shipping_provider",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"feedback",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"remote_ip",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"customer_note",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"year",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"month",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"day",
+                        "value":"None"
+                    }
+                ],
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf8",
+                "node_properties": {
+                    "name": "upsert_data",
+                    "node_type": "Upsert",
+                    "node_parents": ["add_multiple_columns"],
+                    "destination_delta_table":"s3a://cdp-trigger-data-model/delta/miley/purchase_order/",
+                    "column_key":"purchase_order_id"
+                },
+                "data_preview": ""
+            }
+        ],
+        "target": [
+            
+        ]
+    }
+}

@@ -1,0 +1,231 @@
+{   
+    "name": "miley_shopee",
+    "action":"create",
+    "sparkproperties": {
+        "source": [
+            {
+                "source_index": "s1",
+                "node_properties": {
+                    "name": "data_from_shopee",
+                    "node_type": "xlsx"
+                },
+                "data_source": {
+                    "path": "s3://google-sheet/Miley/google-sheet/data_ggs.xlsx",
+                    "sheet_name":"shopee_2022"
+                },
+                "data_preview": ""
+            }
+        ],
+        "transform": [
+            {
+                "transform_index": "tf1",
+                "node_properties": {
+                    "name": "create_spark_dataframe",
+                    "node_type": "Convert Into Dynamic",
+                    "node_parents": ["data_from_shopee"]
+                },
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf2",
+                "node_properties": {
+                    "name": "select_fields",
+                    "node_type": "Select Field",
+                    "node_parents": ["create_spark_dataframe"]
+                },
+                "transform_select_field": ["Ngày đặt hàng", "Phương thức thanh toán", "Người Mua", "Tên Người nhận", "Số điện thoại", 
+                                            "Tỉnh/Thành phố ", "TP / Quận / Huyện", "Quận", "Địa chỉ nhận hàng"],
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf3",
+                "node_properties": {
+                    "name": "change_colunms_name_and_type",
+                    "node_type": "Change Schema",
+                    "node_parents": ["select_fields"]
+                },
+                "transform_apply_mapping": [
+                    {
+                        "source_key": "Ngày đặt hàng",
+                        "old_data_type":"string",
+                        "target_key": "created_at",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "Người Mua",
+                        "old_data_type":"string",
+                        "target_key": "source_customer_id",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "Tên Người nhận",
+                        "old_data_type":"string",
+                        "target_key": "full_name",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "Số điện thoại",
+                        "old_data_type":"string",
+                        "target_key": "phone",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "Tỉnh/Thành phố ",
+                        "old_data_type":"string",
+                        "target_key": "city",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "TP / Quận / Huyện",
+                        "old_data_type":"string",
+                        "target_key": "district",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "Quận",
+                        "old_data_type":"string",
+                        "target_key": "ward",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    },
+                    {
+                        "source_key": "Địa chỉ nhận hàng",
+                        "old_data_type":"string",
+                        "target_key": "street",
+                        "new_data_type": "string",
+                        "drop": "False"
+                    }
+                ],
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf4",
+                "node_properties": {
+                    "name": "convert_df",
+                    "node_type": "Convert Into DataFrame",
+                    "node_parents": ["change_colunms_name_and_type"]
+                },
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf5",
+                "node_properties": {
+                    "name": "add_multiple_columns",
+                    "node_type": "Add Multiple Columns",
+                    "node_parents": ["convert_df"]
+                    
+                },
+                "transform_add_multi_column":[
+                    {
+                        "column_name":"source_name",
+                        "value":"shopee"
+                    },
+                    {
+                        "column_name":"customer_unified_key",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"op",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"timestamp_dms",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"email",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"group_id",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"updated_at",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"is_active",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"disable_auto_group_change",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"created_in",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"firstname",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"middlename",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"lastname",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"dob",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"confirmation",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"gender",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"year",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"month",
+                        "value":"None"
+                    },
+                    {
+                        "column_name":"day",
+                        "value":"None"
+                    }
+                ],
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf6",
+                "node_properties": {
+                    "name": "create_id",
+                    "node_type": "Identifier",
+                    "node_parents": ["add_multiple_columns"],
+                    "column_name":"purchase_order_id"
+                },
+                
+                "data_preview": ""
+            },
+            {
+                "transform_index": "tf7",
+                "node_properties": {
+                    "name": "upsert_data",
+                    "node_type": "Upsert",
+                    "node_parents": ["create_id"],
+                    "destination_delta_table":"s3a://cdp-trigger-data-model/delta/miley/customer_profile/",
+                    "column_key":"customer_profile_id"
+                },
+                "data_preview": ""
+            }
+        ],
+        "target": [
+            
+        ]
+    }
+}
